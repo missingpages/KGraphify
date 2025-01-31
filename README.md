@@ -7,3 +7,8 @@ KGraphify is a Python library that automatically extracts information from PDF d
 - **Schema Mapping**: Define your own schema to structure the graph nodes and relationships.
 - **Graph Creation**: Automatically generates a knowledge graph in Neo4j.
 - **LLM Integration**: Uses language models to interpret and structure content to match the defined schema
+
+## License
+This project is licensed under the MIT License.
+
+

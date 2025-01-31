@@ -12,6 +12,11 @@
 ## Pre-requisites
 - Configure neo4j credentials in config/neo4j-local.txt
 - Define Schema for KG creation in config/schema.yaml
+  - The schema will help to ground the LLM output to predefined nodes and relationships
+- LLM access :  Uses GPT-4o to derive the relationships from unstructured data
+
+## Usage
+- Run 'python main.py <schema-file-path> <pdf-file-path>
 
 ## License
 This project is licensed under the MIT License.

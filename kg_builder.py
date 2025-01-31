@@ -4,11 +4,11 @@ from pydantic import BaseModel
 import pydantic
 import neo4j
 from db import *
+from graph_schema_reader import extract_triplets
 
-
-def get_relation_from_triplets(parent,child):
+def get_relation_from_triplets(parent,child,triplets):
     rel = None
-    triplets = extract_triplets('test.yaml')
+    # triplets = extract_triplets('test.yaml')
     for triplet in triplets:
         if triplet[0]==parent and triplet[1]==child:
             rel = triplet[2] 
@@ -17,7 +17,7 @@ def get_relation_from_triplets(parent,child):
 def convert_dict_to_str(node_dict):
     props_list = []
     for k,v in node_dict.items():
-        
+            v = v.replace("'", "`")
             props = f"{k}:'{v}'"
             props_list.append(props)
             
@@ -25,9 +25,8 @@ def convert_dict_to_str(node_dict):
     return attrs
 
 
-def buildKG(node_key,node_values,parent=None):
-    
-    
+def buildKG(node_key,node_values,parent=None,triplets=[]):
+
     node_props = {}
     query = f"MERGE (node:{node_key}"
     props_list = []
@@ -36,6 +35,7 @@ def buildKG(node_key,node_values,parent=None):
     for k,v in node_values.items():
         if  k != 'includes':
             print(k)
+            v = v.replace("'", "`")
             node_props[k]=v
             props = f"{k}:'{v}'"
             props_list.append(props)
@@ -47,7 +47,7 @@ def buildKG(node_key,node_values,parent=None):
     execute_query(query_with_attrs)
     
     if parent:
-        query_with_rel = f"MATCH (p:{parent[0]} {{ {convert_dict_to_str(parent[1])}}}), (c:{node_key} {{ {convert_dict_to_str(node_props)}}}) WITH p,c MERGE (p)-[:{get_relation_from_triplets(parent[0],node_key)}]->(c)"
+        query_with_rel = f"MATCH (p:{parent[0]} {{ {convert_dict_to_str(parent[1])} }}), (c:{node_key} {{ {convert_dict_to_str(node_props)}}}) WITH p,c MERGE (p)-[:{get_relation_from_triplets(parent[0],node_key,triplets)}]->(c)"
         print(query_with_rel)
         execute_query(query_with_rel)
     

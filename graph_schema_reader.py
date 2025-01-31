@@ -3,11 +3,10 @@ import yaml
 from typing import Optional, Dict, Any
 
 
-with open('test.yaml', 'r') as file:
-    yaml_data = yaml.safe_load(file)
 
 
-root_concepts = yaml_data['concepts']['includes']
+
+# root_concepts = yaml_data['concepts']['includes']
 # print("root concepts #######",root_concepts)
 
 def get_leaf_concept(included_concepts):
@@ -65,7 +64,9 @@ def get_leaf_concept(included_concepts):
         return {child_concept_name: dynamic_model}
         
 
-def get_structured_output_model():
+def get_structured_output_model(yaml_file):
+    with open(yaml_file, 'r') as file:
+        yaml_data = yaml.safe_load(file)
     root_concepts = yaml_data['concepts']['includes']
     for root_concept in root_concepts:
         print("--------------------------------")

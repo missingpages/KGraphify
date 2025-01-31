@@ -6,7 +6,7 @@ def load_neo4j_credentials():
     print("Loading Neo4j credentials...")
     credentials = {}
     try:
-        with open('neo4j-local.txt', 'r') as f:
+        with open('config/neo4j-local.txt', 'r') as f:
             for line in f:
                 key, value = line.strip().split('=')
                 credentials[key] = value

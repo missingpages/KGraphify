@@ -6,12 +6,16 @@ from openai import OpenAI
 client = OpenAI()
 from typing import Optional
 from graph_schema_reader import get_structured_output_model, extract_triplets
-from llm import extract_concept_graph
+from llm import extract_structured_output
 from langchain_community.document_loaders import PyPDFLoader
+import sys
+import json
+from output_formatter import *
+from kg_builder import *
 
 def read_content_from_pdf(pdf_file_path):
-#     pdf_file_path = "../leph101.pdf"
-    loader = PyPDFLoader(file_path)
+#     pdf_file_path = "data/leph101.pdf"
+    loader = PyPDFLoader(pdf_file_path)
     docs = loader.load()
     print(len(docs))
     content = ''
@@ -47,7 +51,8 @@ def main(yaml_file, pdf_file):
     print("\n📑 Step 5/5: Build KG")
     root_key = list(structured_output_matching_schema.keys())[0]  
     root_values = structured_output_matching_schema[root_key]  
-    buildKG(root_key,root_values)
+    triplets = extract_triplets(yaml_file)  
+    buildKG(root_key,root_values,parent=None,triplets=triplets)
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

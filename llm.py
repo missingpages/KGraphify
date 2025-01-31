@@ -17,7 +17,7 @@ def get_llm():
     return llm
 
 
-def extract_structured_output(content):
+def extract_structured_output(structured_output_model,content):
     prompt = f"""
               {PROMPT_TO_EXTRACT_CONTENT}
               
@@ -25,7 +25,7 @@ def extract_structured_output(content):
               topic: {content}
               """
     model = ChatOpenAI(model="gpt-4o", temperature=0)
-    structured_output_model = get_structured_output_model()
+    # structured_output_model = get_structured_output_model()
     structured_llm = model.with_structured_output(structured_output_model)
     response = structured_llm.invoke(prompt)
     return response

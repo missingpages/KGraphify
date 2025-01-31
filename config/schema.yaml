@@ -1,0 +1,39 @@
+concepts:
+  includes:
+  - name: SECTION
+    description: A section of a book describing a broader topic
+    type: str
+    relation: one_to_many
+    contains:
+      - name: SECTION_TITLE
+        description: The title of the section
+        type: str
+      - name: SECTION_CONTENT
+        description: The content of the section
+        type: str
+    includes:
+          - name: SUBSECTION
+            description: The list of subsections present in the section
+            type: str
+            relation: one_to_many
+            kg_relation: CONTAINS
+            contains:
+              - name: SUBSECTION_TITLE
+                description: The title of the subsection
+                type: str
+              - name: SUBSECTION_CONTENT
+                description: The content of the subsection
+                type: str
+          - name: EXAMPLE
+            description: An example of the concept
+            type: str
+            relation: one_to_one
+            kg_relation: HAS
+            contains:
+              - name: EXAMPLE_TITLE
+                description: The title of the example
+                type: str
+              - name: EXAMPLE_CONTENT
+                description: The content of the example
+                type: str
+         

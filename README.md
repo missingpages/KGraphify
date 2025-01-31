@@ -9,6 +9,10 @@
 - **Graph Creation**: Automatically generates a knowledge graph in Neo4j.
 - **LLM Integration**: Uses language models to interpret and structure content to match the defined schema
 
+## Pre-requisites
+- Configure neo4j credentials in config/neo4j-local.txt
+- Define Schema for KG creation in config/schema.yaml
+
 ## License
 This project is licensed under the MIT License.
 

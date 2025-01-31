@@ -17,7 +17,9 @@
 
 ## Usage
 - Run
-  ```python main.py <schema-file-path> <pdf-file-path>```
+  ```python main.py <schema-file-path> <pdf-file-path>
+For eg: python main.py config/schema.yaml data/leph101.pdf
+  ```
 
 ## License
 This project is licensed under the MIT License.

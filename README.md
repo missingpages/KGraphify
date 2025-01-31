@@ -18,7 +18,8 @@
 ## Usage
 - Run
   ```python main.py <schema-file-path> <pdf-file-path>```
-```For eg: python main.py config/schema.yaml data/leph101.pdf```
+ - For eg: 
+```python main.py config/schema.yaml data/leph101.pdf```
   
 
 ## License

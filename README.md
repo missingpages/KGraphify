@@ -1,4 +1,4 @@
-# KGraphify
+![KGraphify](KGraphify.png)
 KGraphify is a Python library that automatically extracts information from PDF documents and builds a knowledge graph in Neo4j, using a user-defined schema. The library leverages large language models (LLMs) to understand and structure the content of the PDF into a structured format that matches with the schema. 
 
 ## Features

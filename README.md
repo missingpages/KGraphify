@@ -16,7 +16,8 @@
 - LLM access :  Uses GPT-4o to derive the relationships from unstructured data
 
 ## Usage
-- Run 'python main.py <schema-file-path> <pdf-file-path>'
+- Run
+  ```python main.py <schema-file-path> <pdf-file-path>```
 
 ## License
 This project is licensed under the MIT License.

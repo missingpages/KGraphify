@@ -19,7 +19,7 @@
 - Run
   ```python main.py --yaml <schema-file-path> --pdf <pdf-file-path>```
  - For eg: 
-```python main.py config/schema.yaml data/leph101.pdf```
+```python main.py --yaml config/schema.yml --pdf data/leph101.pdf```
   
 
 ## License

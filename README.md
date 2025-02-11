@@ -20,6 +20,9 @@
   ```python main.py --yaml <schema-file-path> --pdf <pdf-file-path>```
  - For eg: 
 ```python main.py --yaml config/schema.yml --pdf data/leph101.pdf```
+
+To extract Knowledge graph withput any schema, just use:
+```python main.py --pdf data/leph101.pdf```
   
 
 ## License

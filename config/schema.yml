@@ -1,0 +1,51 @@
+graph:
+  ENTITIES:
+  - name: CHAPTER
+    description: A chapter of a book describing a broader topic
+    properties:
+      - name: CHAPTER_TITLE
+        description: The title of the section
+        type: str
+        isPKEY : True
+      - name: CHAPTER_NO
+        description: The chapter no of the chapter
+        type: str
+  
+  - name: SECTION
+    description: A section of a book describing a broader topic
+    properties:
+      - name: SECTION_TITLE
+        description: The title of the section
+        type: str
+        isPKEY : True
+      - name: SECTION_CONTENT
+        description: The content of the section
+        type: str
+        
+  - name: SUBSECTION
+    description: The list of subsections present in the section
+    properties:
+      - name: SUBSECTION_TITLE
+        description: The title of the subsection
+        type: str
+        isPKEY : True
+      - name: SUBSECTION_CONTENT
+        description: The content of the subsection
+        type: str
+
+  RELATIONS:
+  
+  - name: chapter_sec_rel
+    properties:
+      from: CHAPTER
+      to: SECTION
+      relation: includes
+      
+  - name: sec_subsec_rel
+    properties:
+      from: SECTION
+      to: SUBSECTION
+      relation: contains
+
+
+      

@@ -1,18 +1,6 @@
-from typing import get_origin,get_args,Union
-import inspect
-from pydantic import BaseModel
-import pydantic
-import neo4j
-from db import *
-from graph_schema_reader import extract_triplets
+from db import execute_query
 
-def get_relation_from_triplets(parent,child,triplets):
-    rel = None
-    # triplets = extract_triplets('test.yaml')
-    for triplet in triplets:
-        if triplet[0]==parent and triplet[1]==child:
-            rel = triplet[2] 
-    return rel    
+
 
 def convert_dict_to_str(node_dict):
     props_list = []
@@ -23,51 +11,36 @@ def convert_dict_to_str(node_dict):
             
     attrs = ','.join(props_list)
     return attrs
+    
+
+def create_graph_nodes(entity_name, props):
+    query = f""" MERGE (n:{entity_name} {{{convert_dict_to_str(props)}}}) RETURN n"""
+    print(query)
+    execute_query(query)
 
 
-def buildKG(node_key,node_values,parent=None,triplets=[]):
+def create_nodes(entity_nodes):
+    for entity in entity_nodes:
+        node = entity['entity']
+        node_label = entity['entity']['entity_label']
+        print(node_label)
+        create_graph_nodes(node_label,node)
 
-    node_props = {}
-    query = f"MERGE (node:{node_key}"
-    props_list = []
+def create_graph_relations(rel):
+    from_entity_props = rel['from_entity']
+    from_node_entity = from_entity_props['entity_label']
     
-    # process node properties
-    for k,v in node_values.items():
-        if  k != 'includes':
-            print(k)
-            v = v.replace("'", "`")
-            node_props[k]=v
-            props = f"{k}:'{v}'"
-            props_list.append(props)
-            
-    attrs = ','.join(props_list)
-    query_with_attrs = query + f"{{{attrs} }} )"
-    print(query_with_attrs)        
-    print(f"parent node is {parent}")
-    execute_query(query_with_attrs)
+    to_entity_props = rel['to_entity']
+    to_node_entity = to_entity_props['entity_label']
     
-    if parent:
-        query_with_rel = f"MATCH (p:{parent[0]} {{ {convert_dict_to_str(parent[1])} }}), (c:{node_key} {{ {convert_dict_to_str(node_props)}}}) WITH p,c MERGE (p)-[:{get_relation_from_triplets(parent[0],node_key,triplets)}]->(c)"
-        print(query_with_rel)
-        execute_query(query_with_rel)
+    rel_type = rel['relation_type']
     
-    # process includes  
-    
-    for k,v in node_values.items():
-        if  k == 'includes':
-            
-            parent_node = (node_key,node_props)
-            for child in v: #items in 'includes' list
-                print(f"child in includes list:{child}")
-                for k,v in child.items():
-                    child_nodes = child[k]
-                    if type(child_nodes) is list:
-                        for obj in child_nodes:
-                            buildKG(k,obj,parent_node)
-                    else:
-                        buildKG(k,child_nodes,parent_node)
-                            
+    query = f"""MATCH (p:{from_node_entity}{{{convert_dict_to_str(from_entity_props)}}}), (c:{to_node_entity}{{{convert_dict_to_str(to_entity_props)}}})
+    WITH p,c
+    MERGE (p)-[:{rel_type}]->(c)"""
+    print(f"Creating relation from {from_node_entity} to {to_node_entity} as {rel_type}")
+    execute_query(query)
 
-    #                 print(k,v)
-                pass
-    
+def create_relations(relations):
+    for rel in relations:
+        create_graph_relations(rel)

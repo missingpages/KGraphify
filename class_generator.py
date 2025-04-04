@@ -21,7 +21,7 @@ class ENTITY(BaseModel):
 class RELATION(BaseModel):
     from_entity:ENTITY_NODE = Field(description = "Entity from which the relationship exists")
     to_entity:ENTITY_NODE = Field(description = "Entity to which the relationship points to")
-    relation_type:str = Field(description="Relation between from and to enitites.For eg: HAS,INCLUDES, OWNS, VISITS etc")
+    relation_type:str = Field(description="Relation between from and to enitites.Must be in ONE word.For eg: HAS,INCLUDES, OWNS, VISITS etc")
                                                              
 class FREE_FLOW_GRAPH(BaseModel):
     entities:list[ENTITY] = Field(description="List of all entities extracted from data")
@@ -82,7 +82,7 @@ def create_dyn_model_with_entities(entities,relations=None):
 
             fields['from_entity'] = (all_defined_entities[properties['from']],Field(description = "Entity from which the relationship exists"))
             fields['to_entity'] = (all_defined_entities[properties['to']],Field(description = "Entity to which the relationship exists"))
-            fields['relation_type'] = (str,Field(description="Relation between from and to enitites.For eg: HAS,INCLUDES, OWNS, VISITS etc"))
+            fields['relation_type'] = (str,rel['name'])
             relation_class = create_model(rel['name'],**fields) 
             all_defined_relations[rel['name']] = relation_class
             

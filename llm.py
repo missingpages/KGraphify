@@ -8,7 +8,9 @@ from typing import Optional
 from langchain_openai import ChatOpenAI
 
 PROMPT_TO_EXTRACT_CONTENT_IN_STRUCTURED_OUTPUT = """you are a helpful assistant good at extracting the contents discussed in the topic in a structured way.
-
+Make sure to extract all the contents discussed in the topic. Do not miss any content.
+Make sure to extract the contents in a structured way.
+Make sure to capture all the required relations between the entities.
 """
 
 PROMPT_TO_PARSE_PDF = "Print the content of the input pdf file. Do not hallucinate anything. Just print the content of the pdf file."

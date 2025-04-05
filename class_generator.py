@@ -53,18 +53,27 @@ def create_relation_class(all_defined_relations):
     
 def create_dyn_model_with_entities(entities,relations=None):
     all_defined_entities = {}
+    all_defined_pkey_entities = {}
     for entity in entities:
         properties = entity['properties']
         fields = {}
+        pkey_fields = {}
         for prop in properties:
-            fields[prop['name']] = (eval(prop['type']), Field(description=prop['description']))
+            if 'isPKEY' in prop and prop['isPKEY']==True:
+                pkey_fields[prop['name']] = (eval(prop['type']), Field(description=prop['description']))
+                pkey_fields['entity_label'] = (str, entity['name']) # later ref
+                pkey_entity_class = create_model(prop['name'], **pkey_fields)
+                fields[prop['name']] = (eval(prop['type']), Field(description=prop['description']))
+                
+            else:
+                fields[prop['name']] = (eval(prop['type']), Field(description=prop['description']))
         fields['entity_label'] = (str, entity['name'])
         print(f"creating model for {entity}")    
         entity_class = create_model(
                 entity['name'], **fields
             )# creates individual defined entities
         all_defined_entities[entity['name']] = entity_class
-        
+        all_defined_pkey_entities[entity['name']] = pkey_entity_class
     
     ENTITY_CLASS = create_entity_class(all_defined_entities)
     
@@ -80,8 +89,8 @@ def create_dyn_model_with_entities(entities,relations=None):
                 print("entities not present!")
                 return None
 
-            fields['from_entity'] = (all_defined_entities[properties['from']],Field(description = "Entity from which the relationship exists"))
-            fields['to_entity'] = (all_defined_entities[properties['to']],Field(description = "Entity to which the relationship exists"))
+            fields['from_entity'] = (all_defined_pkey_entities[properties['from']],Field(description = "Entity from which the relationship exists"))
+            fields['to_entity'] = (all_defined_pkey_entities[properties['to']],Field(description = "Entity to which the relationship exists"))
             fields['relation_type'] = (str,rel['name'])
             relation_class = create_model(rel['name'],**fields) 
             all_defined_relations[rel['name']] = relation_class

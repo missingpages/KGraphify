@@ -13,9 +13,8 @@ import sys
 import json
 import argparse
 from kg_builder import *
+from llama_index.core.node_parser import TokenTextSplitter
 
-from llama_index import Document
-from llama_index.node_parser import TokenTextSplitter
 
 def chunk_pdf_by_tokens(pdf_path: str, chunk_size: int = 512, chunk_overlap: int = 50) -> list:
     """
@@ -84,7 +83,7 @@ def read_content_from_pdf(pdf_file_path):
         yield doc.page_content
     
 
-def main(yaml_file=None, pdf_dir=None, process_as=None, chunk_size=None, chunk_overlap=None):
+def main(yaml_file=None, pdf_dir=None, process_as=None, chunk_size=None, chunk_overlap=None, gemini_pdf_parsing=False):
     print("\n📚 Starting Knowledge graph building Pipeline")
     print(f"Input schema file (yaml): {yaml_file}")
     entities,relations = None,None
@@ -115,7 +114,8 @@ def main(yaml_file=None, pdf_dir=None, process_as=None, chunk_size=None, chunk_o
     for pdf_file in pdf_files:
         pdf_path = os.path.join(pdf_dir, pdf_file)
         print(f"\nProcessing PDF file: {pdf_file}")
-
+        global_config = json.load(open('config/global-config.json'))
+        global_config['pdf_file'] = pdf_file
         # For 'full' process, collect all content first
         if process_as == 'full':
             if gemini_pdf_parsing:
@@ -135,12 +135,12 @@ def main(yaml_file=None, pdf_dir=None, process_as=None, chunk_size=None, chunk_o
             # Step 5: Build graph nodes for entities
             print("\n📑 Step 5/6: Build graph nodes for entities")   
             entity_nodes = structured_output['entities'] 
-            create_nodes(entity_nodes)
+            create_nodes(entity_nodes, global_config)
 
             # Step 6: Build graph nodes for relations
             print("\n📑 Step 6/6: Build graph nodes for relations")     
             rel_nodes = structured_output['relations']
-            create_relations(rel_nodes)
+            create_relations(rel_nodes,global_config)
             
         # For other modes, process each chunk separately
         else:
@@ -161,12 +161,12 @@ def main(yaml_file=None, pdf_dir=None, process_as=None, chunk_size=None, chunk_o
                 # Step 5: Build graph nodes for entities
                 print(f"\n📑 Step {i+5}/6: Build graph nodes for entities")   
                 entity_nodes = structured_output['entities'] 
-                create_nodes(entity_nodes)
+                create_nodes(entity_nodes, global_config)
 
                 # Step 6: Build graph nodes for relations
                 print(f"\n📑 Step {i+6}/6: Build graph nodes for relations")     
                 rel_nodes = structured_output['relations']
-                create_relations(rel_nodes)
+                create_relations(rel_nodes,global_config)
 
         
 

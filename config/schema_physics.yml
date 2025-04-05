@@ -1,0 +1,47 @@
+graph:
+  ENTITIES:
+  - name: TOPIC
+    description: topic discussed
+    properties:
+      - name: TOPIC_TITLE
+        description: The title of the topic.
+        type: str
+        isPKEY : True
+      - name: TOPIC_CONTENT
+        description: The content of the topic
+        type: str
+      
+
+
+  RELATIONS:
+
+  - name: PREREQUISITE_FOR
+    properties:
+      from: TOPIC
+      to: TOPIC
+      relation: prerequisite_for
+
+  - name: APPLICATION_OF
+    properties:
+      from: TOPIC
+      to: TOPIC
+      relation: application_of
+
+  - name: EXAMPLE_OF
+    properties:
+      from: TOPIC
+      to: TOPIC
+      relation: example_of
+
+  - name: RELATED_TO
+    properties:
+      from: TOPIC
+      to: TOPIC
+      relation: related_to
+      
+      
+      
+
+      
+      
+      
